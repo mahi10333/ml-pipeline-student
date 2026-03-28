@@ -1,0 +1,47 @@
+import pandas as pd
+import pickle
+
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import mean_squared_error, r2_score
+
+from utils import get_models, evaluate_models
+
+# Load dataset
+data = pd.read_csv("data.csv")
+
+X = data.drop("final_score", axis=1)
+y = data["final_score"]
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Get models
+models = get_models()
+
+# Evaluate models
+results = evaluate_models(models, X_train, X_test, y_train, y_test)
+
+# Select best model
+best_model_name = min(results, key=lambda x: results[x]["MSE"])
+print("\nBest Model:", best_model_name)
+
+best_model = models[best_model_name]
+
+# Create pipeline
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", best_model)
+])
+
+# Train final model
+pipeline.fit(X_train, y_train)
+
+# Save model
+with open("model.pkl", "wb") as f:
+    pickle.dump(pipeline, f)
+
+print("Model saved successfully!")
