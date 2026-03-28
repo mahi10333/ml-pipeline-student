@@ -1,0 +1,18 @@
+import pandas as pd
+
+# Sample dataset
+data = pd.DataFrame({
+    "hours_studied": [1, 2, 3, 4, 5, 6, 7, 8],
+    "attendance": [50, 60, 65, 70, 75, 80, 85, 90],
+    "final_score": [40, 50, 55, 60, 65, 70, 75, 85]
+})
+
+# Simple prediction logic
+def simple_model(hours, attendance):
+    return (hours * 5) + (attendance * 0.5)
+
+# Test prediction
+print("Predicted Score:", simple_model(5, 75))
+
+# Instead of saving file
+print("Model saved successfully! (Simulated)")
